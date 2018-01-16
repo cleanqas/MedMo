@@ -1,0 +1,63 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Index{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+  <div class="row">
+    <div class="col-xs-6">
+      <h1>Campaigns</h1>
+    </div>
+    <div class="col-xs-3">
+      <button type="button" class="btn btn-secondary-outline btn-sm" data-toggle="modal" data-target="#newCampaignModal">New Campaign</button>
+    </div>
+    <div class="col-xs-3">
+      <a href="#" class="btn btn-info-outline btn-sm">Compliance Report</a>
+    </div>
+  </div>
+
+  <div id="newCampaignModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="gridModalLabel">New Campaign</h4>
+        </div>
+        <form method=post class="form" action="{{ url_for('index') }}">
+            <div class="modal-body">
+              <div class="container">
+                    {{ form.csrf_token }}
+                    <fieldset class="form-group">
+                        <label for="productInput">{{form.product.label.text}}</label>
+                        {{ form.product(id = 'productInput', class_ = 'form-control first-input', placeholder = form.product.label.text, required = true, autofocus = true) }}
+                        <small class="text-muted">Input here the product which this campaign promotes (compulsory field)</small>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="campaignNameInput">{{form.campaign_name.label.text}}</label>
+                        {{ form.campaign_name(id = 'campaignNameInput', class_ = 'form-control last-input', placeholder = form.campaign_name.label.text, required = true) }}
+                        <small class="text-muted">Input here the code name of this campaign (compulsory field)</small>
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <label for="campaignFileInput">{{form.campaign_file.label.text}}</label>
+                        {{ form.campaign_file(id = 'campaignFileInput', class_ = 'form-control last-input', placeholder = form.campaign_file.label.text, required = true) }}
+                        <small class="text-muted">Upload the video or audio file for the campaign (compulsory field)</small>
+                    </fieldset>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              {{ form.submit (class_ = 'btn btn-primary')}}
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page_content">
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script defer type="text/babel" src="/static/js/index.js"></script>
+{% endblock %}

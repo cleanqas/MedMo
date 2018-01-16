@@ -1,0 +1,81 @@
+
+/**
+ * @file
+ * Main stylesheet file.
+ */
+
+
+/*****************************************************************************
+ * Main elements
+ ****************************************************************************/
+html {
+  overflow-y: scroll;
+}
+a {
+  cursor: pointer;
+}
+::selection {
+  background: #555;
+  color: #FFF;
+}
+::-moz-selection {
+  background: #555;
+  color: #FFF;
+}
+::-webkit-selection {
+  background: #555;
+  color: #FFF;
+}
+.advert-card{
+    height: 15px;
+}
+.row-clear-margin {
+    margin-bottom:2px;
+    margin-top:2px;
+}
+.row-forced-height {
+    height:30px;
+}
+.product-name {
+    margin-top: 25%;
+}
+.oddcard {
+    border: 1px solid #364250
+}
+.evencard {
+    border: 1px solid #D6A129
+}
+/* Main elements end */
+
+
+/*****************************************************************************
+ * Bootstrap elements edit
+ ****************************************************************************/
+.card-block {
+    padding: 0.50rem;
+}
+.btn{
+    white-space: normal;
+}
+/* Bootstrap elements end */
+
+/*****************************************************************************
+ * JQuery UI Datepicker
+ ****************************************************************************/
+table.ui-datepicker-calendar {border-collapse: separate;}
+.ui-datepicker-calendar td {border: 1px solid transparent;}
+/* end: jQuery UI Datepicker moving pixels fix */
+
+/* begin: jQuery UI Datepicker emphasis on selected dates */
+.ui-datepicker .ui-datepicker-calendar .ui-state-highlight a {
+	background: #743620 none;
+	color: white;
+}
+#ui-datepicker-div {display:none;}
+/* JQuery UI Datepicker elements end */
+
+/*****************************************************************************
+ * Various other styles
+ ****************************************************************************/
+
+/* Various other styles end */

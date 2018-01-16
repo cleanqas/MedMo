@@ -1,0 +1,146 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Index{% endblock %}
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="/static/css/tooltipster.css" />
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <div class="row">
+    <div class="col-xs-6">
+      <h4>Schedule Details</h4>
+    </div>
+    <div class="col-xs-3">
+      <button type="button" class="btn btn-secondary-outline btn-sm" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#addNewScheduleModal">Add New Schedule</button>
+    </div>
+    <div class="col-xs-3">
+      <a href="{{ url_for('index') }}" class="btn btn-info-outline btn-sm">Campaign List</a>
+    </div>
+  </div>
+
+  <div id="editScheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="gridModalLabel">Edit Schedule</h4>
+        </div>
+        <form method=post id="edit_form" class="form" action="{{ url_for('editadvert') }}">
+            <div class="modal-body">
+              <div class="container">
+                    {{ editForm.csrf_token }}
+                    {{ editForm.campaign_id(id = 'campaign_id') }}
+                    {{ editForm.station_id(id = 'station_id') }}
+                    {{ editForm.schedule_dates(id = 'schedule_dates') }}
+                    <fieldset class="form-group">
+                        <small class="text-muted">Enter the Scheduled Dates for Campaign (compulsory field)</small>
+                        <div id="schedule_dates_picker"></div>
+                    </fieldset>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              {{ editForm.submit (id='edit_submit', class_ = 'btn btn-primary')}}
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div id="addNewScheduleModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="addNewModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="addNewModalLabel">Add New Schedule</h4>
+        </div>
+        <form method=post class="form" action="{{ url_for('addnewschedule') }}">
+            <div class="modal-body">
+              <div class="container">
+                    {{ addForm.csrf_token }}
+                    {{ addForm.add_campaign_id(id = 'add_campaign_id', value=advertid) }}
+                    <fieldset class="form-group">
+                        <label for="add_station_id">{{addForm.add_station_id.label.text}}</label>
+                        {{ addForm.add_station_id(id = 'add_station_id') }}
+                        <!--<small class="text-muted">Input here the product which this campaign promotes (compulsory field)</small>-->
+                    </fieldset>
+                    <fieldset class="form-group">
+                        <small class="text-muted">Enter the Scheduled Dates for Campaign (compulsory field)</small>
+                        <div id="add_schedule_dates_picker"></div>
+                    </fieldset>
+                    {{ addForm.add_schedule_dates(id = 'add_schedule_dates') }}
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              {{ addForm.add_submit (class_ = 'btn btn-primary')}}
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="page_content">
+    <input type="hidden" id="advertid" value="{{advertid}}"/>
+</div>
+{% endblock %}
+
+{% block script %}
+<script defer type="text/javascript" src="/static/js/libs/jquery.tooltipster.min.js"></script>
+<script defer type="text/babel" src="/static/js/editadvert.js"></script>
+<script defer type="text/javascript" src="/static/js/libs/jquery-ui.multidatespicker.js"></script>
+<script type="text/javascript">
+    $('#editScheduleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+      var station_name = button.data('stationname')
+      var station_id = button.data('stationid')
+      var campaign_id = button.data('campaignid')
+      var schedule_dates = button.data('scheduledates')
+      var modal = $(this)
+      modal.find('.modal-title').text('Edit Schedule For ' + station_name)
+      modal.find('.modal-body #campaign_id').val(campaign_id)
+      modal.find('.modal-body #station_id').val(station_id)
+      modal.find('.modal-body #schedule_dates').val(schedule_dates)
+      modal.find('.modal-body #schedule_dates_picker').multiDatesPicker({
+        dateFormat: "dd-mm-yy",
+        numberOfMonths: [1,1],
+        addDates: schedule_dates.split(','),
+        minDate: 1
+      })
+      console.log(schedule_dates.split(','))
+      modal.find('.modal-content .form').submit(function(){
+        modal.find('.modal-body #schedule_dates').val(modal.find('.modal-body #schedule_dates_picker').multiDatesPicker('getDates'))
+        console.log(modal.find('.modal-body #schedule_dates').val())
+      })
+    });
+
+    $('#addNewScheduleModal').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget) // Button that triggered the modal
+      var modal = $(this)
+      modal.find('.modal-body #add_schedule_dates_picker').multiDatesPicker({
+        dateFormat: "dd-mm-yy",
+        numberOfMonths: [1,1],
+        minDate: 1
+      })
+      modal.find('.modal-content .form').submit(function(){
+        modal.find('.modal-body #add_schedule_dates').val(modal.find('.modal-body #add_schedule_dates_picker').multiDatesPicker('getDates'))
+        console.log(modal.find('.modal-body #add_schedule_dates').val())
+      })
+    })
+    $( document ).ready(function() {
+        $("body").click(function(event) {
+            var par = $(event.target).parent().attr('class')
+            console.log(par)
+            if(typeof par === 'undefined'){
+                $('.tooltipd').tooltipster('hide')
+            }else{
+                if(par.indexOf("ui-datepicker") < 0){
+                    $('.tooltipd').tooltipster('hide')
+                }
+            }
+        })
+    });
+
+</script>
+{% endblock %}
